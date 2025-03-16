@@ -1,0 +1,24 @@
+  
+---
+import { getCollection } from 'astro:content';
+const allPapers = await getCollection('papers');
+const sortedPapers = allPapers.sort((a, b) => b.data.year - a.data.year)
+---
+  <section class="mb-10">
+    <h2 class="text-2xl font-semibold mb-4">Research Papers</h2>
+    <ul class="space-y-4">
+      {sortedPapers.map((paper) => (
+        <li class="border p-4 rounded">
+          <h3 class="font-semibold text-lg">{paper.data.title}</h3>
+          <p class="text-sm text-gray-500">
+            {paper.data.authors} &ndash; {paper.data.journal} ({paper.data.year})
+          </p>
+          {paper.data.doi && (
+            <a href={`https://doi.org/${paper.data.doi}`} class="text-accent underline">
+              View Paper
+            </a>
+          )}
+        </li>
+      ))}
+    </ul>
+  </section>

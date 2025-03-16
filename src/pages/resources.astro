@@ -1,0 +1,43 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const resources = await getCollection('resources');
+
+// Group resources by category. Default to 'Uncategorized'
+const groupedResources = resources.reduce((acc, res) => {
+  const category = res.data.category || 'Uncategorized';
+  if (!acc[category]) acc[category] = [];
+  acc[category].push(res);
+  return acc;
+}, {});
+// Get sorted categories for consistent display 
+const categories = Object.keys(groupedResources).sort();
+---
+
+<BaseLayout>
+  <h1 class="text-3xl font-bold mb-6">Recommended Resources</h1>
+  {categories.map((category) => (
+    <>
+      {/* Markdown subheading for each category */}
+      <h2 class="text-2xl font-semibold mb-6">{category}</h2>
+      
+      <section class="mb-10">
+        <ul class="space-y-4">
+          {groupedResources[category].map((res) => (
+            <li class="border p-4 rounded">
+              <h3 class="font-semibold text-lg">{res.data.title}</h3>
+              <p class="mt-2">{res.data.description}</p>
+              {res.data.link && (
+                <a href={res.data.link} class="text-accent underline mt-2 inline-block">
+                  View Resource
+                </a>
+              )}
+            </li>
+          ))}
+        </ul>
+      </section>
+    </>
+  ))}
+</BaseLayout>
+

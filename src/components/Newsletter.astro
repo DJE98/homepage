@@ -1,0 +1,68 @@
+---
+const listId = 123; 
+const apiUrl = 'https://newsletter.eisermann.one/api/subscribers';
+--- 
+<!--
+<section class="mb-12">
+  <h2 class="text-2xl font-semibold mb-4">Newsletter Signup</h2>
+  <p class="mb-4">Stay updated with the latest research, blog posts, and upcoming events.</p>
+  <form id="newsletter-form" class="flex space-x-2 max-w-sm">
+    <div>
+      <input 
+        type="text" 
+        placeholder="Your name"
+        id="name" 
+        name="name" 
+        class="border rounded w-full p-2 mb-4"
+        required
+      />
+      <input 
+        type="email" 
+        placeholder="Your email" 
+        id="email"
+        name="email"
+        class="border rounded w-full p-2 mb-4" 
+        required
+      />
+      <button 
+        type="submit" 
+        class="bg-accent text-black font-bold p-2 mb-4 rounded">
+        Subscribe
+      </button>
+    </div>
+  </form>
+</section>
+
+<script type="module">
+  const form = document.getElementById('newsletter-form');
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = form.name.value;
+    const email = form.email.value;
+    try {
+      const response = await fetch( {{apiUrl}} , {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          lists: [{{listId}}]
+        })
+      });
+      const data = await response.json();
+      
+      if (data.error) {
+        alert('Error: ' + data.error);
+      } else {
+        alert('Thank you for subscribing!');
+        form.reset();
+      }
+    } catch (error) {
+      console.error('Subscription error:', error);
+      alert('Subscription failed. Please try again.');
+    }
+  });
+</script>
+-->

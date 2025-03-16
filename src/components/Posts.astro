@@ -1,0 +1,25 @@
+---
+import { getCollection } from 'astro:content';
+interface Props {
+  start: int;
+  end: int;
+};
+const blogPosts = await getCollection('blog');
+let recentPosts = blogPosts.sort((a, b) => new Date(b.data.date) - new Date(a.data.date))
+const {start=0, end=recentPosts.length} = Astro.props;
+recentPosts = recentPosts.slice(start, end);
+---
+    <div class="grid gap-4 md:grid-cols-3">
+      {recentPosts.map(post => (
+        <article class="border p-4 rounded shadow-sm">
+          <h3 class="font-semibold mb-2">{post.data.title}</h3>
+          <p class="text-sm text-gray-600">
+            {new Date(post.data.date).toLocaleDateString()}
+          </p>
+          <p class="mt-2 line-clamp-3">{post.data.description}</p>
+          <a href={`/blog/${post.slug}`} class="text-accent mt-2 inline-block">
+            Read More &rarr;
+          </a>
+        </article>
+      ))}
+    </div> 

@@ -1,0 +1,6 @@
+
+import __ASTRO_IMAGE_IMPORT_ZWcMaN from "../media/when-algorithms-curate-reality.webp?astroContentImageFlag=&importer=src%2Fcontent%2Fblog%2Fwhen-algorithms-curate-reality.md";
+import __ASTRO_IMAGE_IMPORT_S5R76 from "../media/google_search.png?astroContentImageFlag=&importer=src%2Fcontent%2Fblog%2Fwhen-algorithms-curate-reality.md";
+import __ASTRO_IMAGE_IMPORT_Z12KL6p from "../media/chatgpt_with_activated_web_search.png?astroContentImageFlag=&importer=src%2Fcontent%2Fblog%2Fwhen-algorithms-curate-reality.md";
+export default new Map([["../media/when-algorithms-curate-reality.webp?astroContentImageFlag=&importer=src%2Fcontent%2Fblog%2Fwhen-algorithms-curate-reality.md", __ASTRO_IMAGE_IMPORT_ZWcMaN], ["../media/google_search.png?astroContentImageFlag=&importer=src%2Fcontent%2Fblog%2Fwhen-algorithms-curate-reality.md", __ASTRO_IMAGE_IMPORT_S5R76], ["../media/chatgpt_with_activated_web_search.png?astroContentImageFlag=&importer=src%2Fcontent%2Fblog%2Fwhen-algorithms-curate-reality.md", __ASTRO_IMAGE_IMPORT_Z12KL6p]]);
+		

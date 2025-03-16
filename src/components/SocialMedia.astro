@@ -1,0 +1,49 @@
+---
+import MailIcon from '../content/icon/mail.svg';
+import MatrixIcon from '../content/icon/matrix.svg';
+import MastodonIcon from '../content/icon/mastodon.svg';
+import GitHubIcon from '../content/icon/github.svg';
+const { class: className, ...rest } = Astro.props;
+
+---
+    <div class={className} {...rest}>
+  <a 
+    href="mailto:contact@eisermann.one" 
+    target="_blank" 
+    rel="noopener"
+    class="flex items-center space-x-2"
+  >
+    <MailIcon class="w-5 h-5" />
+    <span>Mail</span>
+  </a>
+
+  <a 
+    href="https://matrix.to/#/@dje9898:matrix.org" 
+    target="_blank" 
+    rel="noopener"
+    class="flex items-center space-x-2"
+  >
+    <MatrixIcon class="w-5 h-5" />
+    <span>Matrix</span>
+  </a>
+
+  <a 
+    href="https://chaos.social/@DJE98" 
+    target="_blank" 
+    rel="noopener"
+    class="flex items-center space-x-2"
+  >
+    <MastodonIcon class="w-5 h-5" />
+    <span>Mastodon</span>
+  </a>
+
+  <a 
+    href="https://github.com/DJE98" 
+    target="_blank" 
+    rel="noopener"
+    class="flex items-center space-x-2"
+  >
+    <GitHubIcon class="w-5 h-5" />
+    <span>GitHub</span>
+  </a>
+</div>

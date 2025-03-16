@@ -1,0 +1,53 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, getEntryBySlug } from 'astro:content';
+
+export async function getStaticPaths() {
+  const blogPosts = await getCollection('blog');
+  return blogPosts.map((post) => ({
+    params: { slug: post.slug }
+  }));
+}
+
+const { slug } = Astro.params;
+const post = await getEntryBySlug('blog', slug);
+
+if (!post) {
+  throw new Error(`Post not found for slug: ${slug}`);
+}
+
+const { Content } = await post.render();
+---
+<BaseLayout>
+  <article class="prose lg:prose-xl max-w-3xl mx-auto py-8">
+    <div class="mb-6">
+    <h1 class="text-3xl font-bold mb-2">{post.data.title}</h1>
+    <p class="text-sm text-gray-500">
+      {new Date(post.data.date).toLocaleDateString()}
+    </p>
+    </div>
+    <section class="markdown-content">
+      <Content />
+    </section>
+
+  </article>
+        <style>
+        /* Apply custom styles using CSS properties */
+        .markdown-content :global(h2) {
+          font-size: 1.75rem;  /* Equivalent to text-2xl */
+          line-height: 2.25rem;
+          font-weight: 600;    /* Equivalent to font-semibold */
+          margin-bottom: 1.5rem;
+          margin-top: 1.5rem;
+        }
+      .markdown-content :global(a) {
+      color: #1d4ed8; 
+      text-decoration-thickness: 2px;
+  
+    }
+    .markdown-content :global(p){
+      margin-bottom: 1.0rem
+    }
+      </style>
+</BaseLayout>
+

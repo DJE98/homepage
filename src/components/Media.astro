@@ -1,0 +1,22 @@
+---
+import { getCollection } from 'astro:content';
+const allMedia = await getCollection('media');
+---
+  <section class="mb-10">
+    <h2 class="text-2xl font-semibold mb-4">Media</h2>
+    <ul class="space-y-4">
+      {allMedia.map((entry) => (
+        <li class="border p-4 rounded">
+          <h3 class="font-semibold text-lg">{entry.data.title}</h3>
+          <p class="text-sm text-gray-500">
+            {new Date(entry.data.date).toLocaleDateString()}
+          </p>
+          <p class="mt-2">{entry.data.description}</p>
+          {entry.data.link && (
+            <a href={entry.data.link} class="text-accent underline">
+              Read / Watch
+            </a>
+          )}
+        </li>
+      ))}
+    </ul>

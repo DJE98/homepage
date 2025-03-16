@@ -1,0 +1,25 @@
+---
+const navLinks = [
+  { href: '/', label: 'Home' },
+  { href: '/research', label: 'Research' },
+  { href: '/publications', label: 'Publications' },
+  { href: '/blog', label: 'Blog' },
+  { href: '/resources', label: 'Resources' },
+    { href: '/about', label: 'About' },
+];
+---
+<nav class="flex items-center justify-between p-4">
+  <div class="text-xl font-bold text-accent">Dennis Eisermann</div>
+  <ul class="flex space-x-4">
+    {navLinks.map(link => (
+      <li>
+        <a 
+          href={link.href} 
+          class="text-primary hover:text-accent transition-colors"
+        >
+          {link.label}
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>
