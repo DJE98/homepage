@@ -1,0 +1,238 @@
+---
+---
+
+<section class="mb-10">
+  <ul class="space-y-4">
+    <li class="border-l pl-4 relative">
+      <div class="absolute -left-2 top-0 h-4 w-4 rounded-full bg-accent"></div>
+
+      <h3 class="font-semibold">Timeframe</h3>
+
+      <div class="grid gap-4 sm:grid-cols-3">
+        <label>
+          <span class="text-xs text-gray-500 mb-1 block">Days / Week</span>
+          <input
+            data-field="days"
+            type="number"
+            min="1"
+            max="7"
+            step="0.5"
+            value="5"
+            class="w-full border rounded px-3 py-2"
+          />
+        </label>
+        <label>
+          <span class="text-xs text-gray-500 mb-1 block">Weeks</span>
+          <input
+            data-field="weeks"
+            type="number"
+            min="0.1"
+            step="0.1"
+            class="w-full border rounded px-3 py-2"
+          />
+        </label>
+        <label>
+          <span class="text-xs text-gray-500 mb-1 block">Months</span>
+          <input
+            data-field="months"
+            type="number"
+            min="0.1"
+            step="0.1"
+            value="6"
+            class="w-full border rounded px-3 py-2"
+          />
+        </label>
+      </div>
+    </li>
+
+    <li class="border-l pl-4 relative">
+      <div class="absolute -left-2 top-0 h-4 w-4 rounded-full bg-accent"></div>
+
+      <h3 class="font-semibold">Weekly Schedule</h3>
+
+      <div class="grid gap-4 sm:grid-cols-3">
+        <label>
+          <span class="text-xs text-gray-500 mb-1 block">Hours / Day</span>
+          <input
+            data-field="hoursPerDay"
+            type="number"
+            min="0"
+            step="0.01"
+            class="w-full border rounded px-3 py-2"
+          />
+        </label>
+
+        <label>
+          <span class="text-xs text-gray-500 mb-1 block">Hours / Week</span>
+          <input
+            data-field="hoursPerWeek"
+            type="number"
+            min="0"
+            step="0.01"
+            class="w-full border rounded px-3 py-2"
+          />
+        </label>
+        <label>
+          <span class="text-xs text-gray-500 mb-1 block">Hours / Month</span>
+          <input
+            data-field="hoursPerMonth"
+            type="number"
+            min="0"
+            step="0.01"
+            class="w-full border rounded px-3 py-2"
+          />
+        </label>
+      </div>
+    </li>
+
+    <li class="border-l pl-4 relative">
+      <div class="absolute -left-2 top-0 h-4 w-4 rounded-full bg-accent"></div>
+
+      <h3 class="font-semibold">Workload</h3>
+
+      <div class="grid gap-4 sm:grid-cols-1">
+        <label>
+          <span class="text-xs text-gray-500 mb-1 block">ECTS</span>
+          <input
+            data-field="ects"
+            type="number"
+            min="0"
+            step="0.5"
+            value="8"
+            class="w-full border rounded px-3 py-2"
+          />
+        </label>
+
+
+      </div>
+    </li>
+
+    <li class="border-l pl-4 relative">
+      <div class="absolute -left-2 top-0 h-4 w-4 rounded-full bg-accent"></div>
+
+      <h3 class="font-semibold">Calculated project workload</h3>
+      <p id="summary"></p>
+    </li>
+  </ul>
+</section>
+
+<script is:inline>
+  const HOURS_PER_ECTS = 30;
+  const WEEKS_PER_MONTH = 52 / 12;
+
+  const inputs = {
+    days: document.querySelector('[data-field="days"]'),
+    hoursPerDay: document.querySelector('[data-field="hoursPerDay"]'),
+    weeks: document.querySelector('[data-field="weeks"]'),
+    hoursPerWeek: document.querySelector('[data-field="hoursPerWeek"]'),
+    months: document.querySelector('[data-field="months"]'),
+    hoursPerMonth: document.querySelector('[data-field="hoursPerMonth"]'),
+    ects: document.querySelector('[data-field="ects"]'),
+  };
+
+  const summary = document.querySelector("#summary");
+
+  const state = {
+    days: 5,
+    hoursPerDay: 0,
+    weeks: 0,
+    hoursPerWeek: 0,
+    months: 6,
+    hoursPerMonth: 0,
+    ects: 8,
+    totalHours: 0,
+  };
+
+  function toNumber(value, fallback = 0) {
+    const parsed = Number.parseFloat(value);
+    return Number.isFinite(parsed) ? parsed : fallback;
+  }
+
+  function positive(value, fallback = 1) {
+    return Math.max(toNumber(value, fallback), 0.0001);
+  }
+
+  function format(value, decimals = 2) {
+    if (!Number.isFinite(value)) return "";
+    return value.toFixed(decimals).replace(/\.?0+$/, "");
+  }
+
+  function readChangedField(field) {
+    state[field] = positive(inputs[field].value, state[field] || 1);
+
+    if (field === "days") {
+      state.days = Math.min(Math.max(state.days, 1), 7);
+    }
+  }
+
+  function recalculate(changedField) {
+    readChangedField(changedField);
+
+    if (changedField === "months") {
+      state.weeks = state.months * WEEKS_PER_MONTH;
+    }
+
+    if (changedField === "weeks") {
+      state.months = state.weeks / WEEKS_PER_MONTH;
+    }
+
+    if (changedField !== "weeks" && changedField !== "months" && state.weeks <= 0) {
+      state.weeks = state.months * WEEKS_PER_MONTH;
+    }
+
+    switch (changedField) {
+      case "hoursPerDay":
+        state.totalHours = state.hoursPerDay * state.days * state.weeks;
+        state.ects = state.totalHours / HOURS_PER_ECTS;
+        break;
+
+      case "hoursPerWeek":
+        state.totalHours = state.hoursPerWeek * state.weeks;
+        state.ects = state.totalHours / HOURS_PER_ECTS;
+        break;
+
+      case "hoursPerMonth":
+        state.totalHours = state.hoursPerMonth * state.months;
+        state.ects = state.totalHours / HOURS_PER_ECTS;
+        break;
+
+      case "ects":
+      case "days":
+      case "weeks":
+      case "months":
+      default:
+        state.totalHours = state.ects * HOURS_PER_ECTS;
+        break;
+    }
+
+    state.hoursPerMonth = state.totalHours / state.months;
+    state.hoursPerWeek = state.totalHours / state.weeks;
+    state.hoursPerDay = state.hoursPerWeek / state.days;
+
+    render();
+  }
+
+  function render() {
+    inputs.days.value = format(state.days);
+    inputs.hoursPerDay.value = format(state.hoursPerDay);
+    inputs.weeks.value = format(state.weeks);
+    inputs.hoursPerWeek.value = format(state.hoursPerWeek);
+    inputs.months.value = format(state.months);
+    inputs.hoursPerMonth.value = format(state.hoursPerMonth);
+    inputs.ects.value = format(state.ects);
+
+    summary.textContent =
+      `${format(state.ects)} ECTS = ${format(state.totalHours, 1)} total hours. ` +
+      `Across ${format(state.months)} months / ${format(state.weeks)} weeks, ` +
+      `that is ${format(state.hoursPerMonth)} hours/month, ` +
+      `${format(state.hoursPerWeek)} hours/week, or ` +
+      `${format(state.hoursPerDay)} hours/day.`;
+  }
+
+  Object.entries(inputs).forEach(([field, input]) => {
+    input.addEventListener("input", () => recalculate(field));
+  });
+
+  state.weeks = state.months * WEEKS_PER_MONTH;
+  recalculate("ects");
+</script>
