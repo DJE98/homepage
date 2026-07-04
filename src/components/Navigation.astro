@@ -5,16 +5,21 @@ const navLinks = [
   { href: '/publications', label: 'Publications' },
   { href: '/blog', label: 'Blog' },
   { href: '/resources', label: 'Resources' },
-    { href: '/about', label: 'About' },
+  { href: '/about', label: 'About' },
 ];
 ---
-<nav class="flex items-center justify-between p-4">
-  <div class="text-xl font-bold text-accent">Dennis Eisermann</div>
-  <ul class="flex space-x-4">
-    {navLinks.map(link => (
+
+<nav class="relative flex items-center justify-between p-4">
+  <a href="/" class="text-xl font-bold text-accent">
+    Dennis Eisermann
+  </a>
+
+  <!-- Desktop menu -->
+  <ul class="hidden md:flex space-x-4">
+    {navLinks.map((link) => (
       <li>
-        <a 
-          href={link.href} 
+        <a
+          href={link.href}
           class="text-primary hover:text-accent transition-colors"
         >
           {link.label}
@@ -22,4 +27,86 @@ const navLinks = [
       </li>
     ))}
   </ul>
+
+  <!-- Mobile hamburger button -->
+  <button
+    id="mobile-menu-button"
+    type="button"
+    class="md:hidden inline-flex items-center justify-center rounded-md p-2 text-primary hover:text-accent focus:outline-none focus:ring-2 focus:ring-accent"
+    aria-controls="mobile-menu"
+    aria-expanded="false"
+  >
+    <span class="sr-only">Open main menu</span>
+
+    <!-- Hamburger icon -->
+    <svg
+      id="hamburger-icon"
+      class="h-6 w-6"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="2"
+      stroke="currentColor"
+      aria-hidden="true"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M4 6h16M4 12h16M4 18h16"
+      />
+    </svg>
+
+    <!-- Close icon -->
+    <svg
+      id="close-icon"
+      class="hidden h-6 w-6"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="2"
+      stroke="currentColor"
+      aria-hidden="true"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M6 18L18 6M6 6l12 12"
+      />
+    </svg>
+  </button>
+
+  <!-- Mobile menu -->
+  <div
+    id="mobile-menu"
+    class="absolute left-0 top-full z-50 hidden w-full border-t border-primary/10 bg-white px-4 py-4 shadow-md md:hidden"
+  >
+    <ul class="flex flex-col space-y-3">
+      {navLinks.map((link) => (
+        <li>
+          <a
+            href={link.href}
+            class="block text-primary hover:text-accent transition-colors"
+          >
+            {link.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
 </nav>
+
+<script>
+  const button = document.getElementById('mobile-menu-button');
+  const menu = document.getElementById('mobile-menu');
+  const hamburgerIcon = document.getElementById('hamburger-icon');
+  const closeIcon = document.getElementById('close-icon');
+
+  button?.addEventListener('click', () => {
+    const isOpen = button.getAttribute('aria-expanded') === 'true';
+
+    button.setAttribute('aria-expanded', String(!isOpen));
+    menu?.classList.toggle('hidden');
+    hamburgerIcon?.classList.toggle('hidden');
+    closeIcon?.classList.toggle('hidden');
+  });
+</script>
